@@ -1,0 +1,140 @@
+---
+title: "Assessing Key Indicators Through Random Forest Variable Importance Analysis"
+format: html
+editor: visual
+---
+
+## Data Cleaning / Pre-processing steps
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(ggthemes)
+
+dat <- read_csv("data.csv")
+
+# data cleaning steps
+dat_clean <- dat %>%
+  filter(subgroup %in% c("Rural")) %>% 
+  mutate(date = as.numeric(date)) %>% 
+  filter(date < 2019) %>% 
+  select(-source, -dimension, -se, -ci_lb, -ci_ub, -flag, -iso3, -favourable_indicator, -update, -dataset_id, -indicator_abbr, -indicator_scale,-ordered_dimension, -subgroup_order, -reference_subgroup, -wbincome2024, -estimate, -population) %>%
+  mutate(year = as.character(date)) %>%
+  unite("country_year", setting, year, sep = "_") %>%
+  pivot_wider(
+    names_from = indicator_name,
+    values_from = setting_average
+  ) %>% 
+  select(1:16)
+
+#read in fetal mortality rate data
+fetal_mortality_rate_dat <- read_csv("fetal_mortality.csv")
+
+#fetal mortality rate data cleaning 
+fmr_dat_clean <- fetal_mortality_rate_dat %>%
+  filter(date > 1999) %>%
+  select(setting, date, dimension, setting_average, population) %>% 
+  mutate(year = as.character(date)) %>% 
+  unite("country_year", setting, year, sep = "_") %>%
+  filter(dimension %in% c("Sex")) 
+
+#joining the data with some final cleaning steps
+final_dataset <- dat_clean %>%
+  full_join(fmr_dat_clean, by = c("country_year", "date")) %>% 
+  rename("fetal_mortality_country_average" = "setting_average") %>% 
+  select(-dimension, -population) %>% 
+  drop_na() %>% 
+  unique()
+  
+#composing this into a final data set for further analysis
+write_csv(final_dataset, "rural_indicators.csv")
+
+```
+
+# Building a Random Forest Model and Evaluating Variable Importance
+
+```{r}
+# building random forest modeling 
+
+#ensuring randomness 
+set.seed(253)
+
+#loading in nessecary packages 
+library(tidyverse)
+library(tidymodels)
+library(rpart)        # for building trees
+library(rpart.plot)   # for plotting trees
+library(randomForest) # for bagging & forests
+library(infer) 
+library(vip)
+
+
+
+tidymodels_prefer()
+
+
+# STEP 1: Model Specification
+rf_spec <- rand_forest()  %>%
+  set_mode("regression") %>%
+  set_engine(engine = "ranger") %>% 
+  set_args(
+    mtry = NULL,
+    trees = 500,
+    min_n = 2,
+    probability = FALSE, # give classifications, not probability calculations
+    importance = "impurity" # use Gini index to measure variable importance
+  )
+
+# STEP 2: Build the forest model
+ensemble_model <- rf_spec %>% 
+  fit(fetal_mortality_country_average ~ 
+      `Population using basic sanitation services (%)` + 
+      `Population using limited sanitation services (%)` + 
+      `Population practising open defecation (%)` + 
+      `Population using basic drinking water services (%)` + 
+      `Population using limited drinking water services (%)` + 
+      `Population using surface water (%)` + 
+      `Population using basic hygiene services (%)` + 
+      `Population using limited hygiene services (%)` + 
+      `Population with no hygiene services (%)`, 
+      data = final_dataset)
+
+#plucking variable importance 
+ensemble_model %>%
+  extract_fit_engine() %>%
+  pluck("variable.importance") %>% 
+  sort(decreasing = TRUE)
+
+#graphing variable importance
+ensemble_model %>% 
+  vip(geom = "point", num_features = 9) +
+  labs(title = "Understanding Indicator Importance",
+       x = "Importance Score",
+       y = "Indicator") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#graphing variable importance (but, in a bar graph)
+ensemble_model %>% 
+  vip(geom = "col", num_feature = 9) +
+  labs(title = "Understanding Indicator Importance",
+       x = "Importance Score",
+       y = "Indicator") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+
+#printing model metrics for evaluation
+
+ensemble_model
+
+library(yardstick)
+
+predictions <- predict(ensemble_model, final_dataset) %>% bind_cols(final_dataset)
+
+predictions %>% 
+  metrics(truth = fetal_mortality_country_average, estimate = .pred) %>% 
+  print()
+
+```
