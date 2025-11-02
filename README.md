@@ -72,7 +72,7 @@ We created various visual outputs to communicate findings effectively. This incl
 
 Here is the plot for indicator importance:
 
-![Indicator Importance Plot](vip_plot.png)
+![Indicator Importance Plot](https://github.com/BioDataSage/ff-water-quality/blob/main/figures/vip_plot.png)
 
 ## Supporting Literature
 Our analysis identified **basic drinking water access** and **basic hygiene services** as the strongest WASH-related predictors of lower infant mortality. Two key published studies corroborate these findings:
