@@ -16,6 +16,7 @@ dat <- read_csv("data.csv")
 
 # data cleaning steps
 dat_clean <- dat %>%
+  filter(subgroup %in% "Rural") %>% #this selection is arbitrary results are representative of population 
   mutate(date = as.numeric(date)) %>% 
   filter(date < 2019) %>% 
   select(-source, -dimension, -se, -ci_lb, -ci_ub, -flag, -iso3, -favourable_indicator, -update, -dataset_id, -indicator_abbr, -indicator_scale,-ordered_dimension, -subgroup_order, -reference_subgroup, -wbincome2024, -estimate, -population) %>%
@@ -47,7 +48,7 @@ final_dataset <- dat_clean %>%
   unique()
   
 #composing this into a final data set for further analysis
-write_csv(final_dataset, "rural_indicators.csv")
+write_csv(final_dataset, "country_indicators_and_fmr.csv")
 
 ```
 
