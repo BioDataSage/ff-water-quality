@@ -36,7 +36,7 @@ Countries with insufficient data across the key WASH and mortality variables wer
 To maintain consistency and analytical reliability, countries with substantial missing values were excluded for correlation-based analyses, while broader visualizations could include all countries where data were available.
 
 ## Data Manipulation
-- Join WASH indicators and infant mortality by country and year.
+- Join WASH indicators and infant mortality by country and year. (e.g., basic sanitation, open defecation)
 - Create derived field(s) when needed:
   - High/low infant mortality label
 
@@ -48,6 +48,8 @@ To maintain consistency and analytical reliability, countries with substantial m
 - Correlation analysis:
   - Compute Pearson correlations between each WASH indicator (% water, % sanitation, % hygiene) and infant mortality.
   - Report correlation coefficients.
+- Fit a random forests classification model with fetal mortality as the outcome and WASH variables as predictors.
+- Use feature importance scores to rank variables by their contribution. 
 
 # Data Analysis:
 We cleaned, processed, and analyzed WASH datasets using R and Python within Posit Cloud (Jupyter & RStudio) and google colab. The analysis work included data wrangling, statistical summaries, and exploratory techniques to identify patterns, relationships, and trends in the data. We also implemented a Random Forest model in R to support predictive analysis and evaluate feature importance.
