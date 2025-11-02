@@ -5,9 +5,9 @@
   * country_indicators_and_fmr.csv - Our scrubbed and transformed data. This is the output .csv from code block 1 of water_health_correlation_pipeline.
   * fetal_mortality.csv - Under-5 mortality data. Taken from 'https://www.who.int/data/sets/health-inequality-monitor-dataset#igme-u5mr'
   * water_health_indicators - WASH indicator data. Taken from 'https://www.who.int/data/sets/health-inequality-monitor-dataset#wash'
-* figures/
+* figures
   * vip_plot.png
-* results/
+* results
   * pearson_correlation_results.txt - Pearson correlation results between indicators and under-5 mortalityu. This is the output .txt from code block 2 of water_health_correlation_pipeline.qmd
 * water_health_correlation_pipeline.qmd
   * This is our core pipeline that contains our data scrubber and data manipulation. It uses the Quatro medium. The medium is capable of interpretting both R and Python allowing each team member to play to their unique strengths.
