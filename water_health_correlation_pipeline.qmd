@@ -29,7 +29,7 @@ dat_clean <- dat %>%
   select(1:16)
 
 #read in fetal mortality rate data
-fetal_mortality_rate_dat <- read_csv("fetal_mortality.csv")
+fetal_mortality_rate_dat <- read_csv("data/fetal_mortality.csv")
 
 #fetal mortality rate data cleaning 
 fmr_dat_clean <- fetal_mortality_rate_dat %>%
@@ -187,14 +187,16 @@ ensemble_model %>%
 
 #graphing variable importance (but, in a bar graph)
 vip_plot <- ensemble_model %>% 
-  vip(geom = "col", num_feature = 9) +
+  vip(geom = "col", 
+      num_feature = 9, 
+      aesthetics = list(color = "black", fill = "#eae2d7")) +
   labs(title = "Understanding Indicator Importance",
        y = "Importance Score",
        x = "Indicator") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
 
-ggsave(filename = "vip_plot.png", plot = vip_plot, width = 9, height = 6, dpi = 300)
+ggsave(filename = "vip_plot.png", path = "figures", plot = vip_plot, width = 9, height = 6, dpi = 300)
 
 
 
