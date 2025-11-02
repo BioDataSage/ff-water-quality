@@ -116,6 +116,8 @@ def main():
   # 3) Get the Pearson correlation coefficients between under-5 mortality and each indicator
   u5_pearson_correlation_coefficients = calculate_pearson_correlation_coefficient(df_indicators)
   # Sort in descending order to get the strongest indicators
+  with open('results/pearson_correlation_results.txt', 'w') as file
+    file.write(u5_pearson_correlation_coefficients.sort_values(ascending=False, key=abs))
   print(u5_pearson_correlation_coefficients.sort_values(ascending=False, key=abs))
 
 if __name__ == "__main__":

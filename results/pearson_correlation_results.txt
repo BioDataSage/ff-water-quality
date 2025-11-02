@@ -1,0 +1,14 @@
+fetal_mortality_country_average                                1.000000
+Population using basic hygiene services (%)                   -0.799412
+Population using basic sanitation services (%)                -0.793215
+Population using unimproved drinking water services (%)        0.774946
+Population using basic drinking water services (%)            -0.772797
+Population using safely managed drinking water services (%)   -0.725338
+Population with no hygiene services (%)                        0.713976
+Population using unimproved sanitation services (%)            0.642635
+Population practising open defecation (%)                      0.560546
+Population using surface water (%)                             0.517686
+Population using limited drinking water services (%)           0.467069
+Population using limited hygiene services (%)                  0.382408
+Population using limited sanitation services (%)               0.352931
+Name: fetal_mortality_country_average, dtype: float64
