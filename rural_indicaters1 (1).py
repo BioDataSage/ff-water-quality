@@ -175,3 +175,41 @@ plt.xlabel("Feature Importance")
 plt.ylabel("WASH Factor")
 plt.show()
 
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+import numpy as np
+
+# Columns
+hygiene_col = 'Population using basic hygiene services (%)'
+mortality_col = 'fetal_mortality_country_avergage'
+
+# Remove missing values
+df_clean = df[[hygiene_col, mortality_col]].dropna()
+
+# X and y for model
+X = df_clean[[hygiene_col]]  # independent variable
+y = df_clean[mortality_col]  # target
+
+# Model
+model = LinearRegression()
+model.fit(X, y)
+
+# Predictions
+y_pred = model.predict(X)
+
+# Plot
+plt.figure(figsize=(8,5))
+plt.scatter(X, y, color='pink', label='Data points')
+plt.plot(X, y_pred, label='Regression Line')  # default color
+plt.xlabel('Basic Hygiene Services (%)')
+plt.ylabel('Fetal Mortality Rate')
+plt.title('Linear Regression: Hygiene vs Fetal Mortality')
+plt.grid(True)
+plt.legend()
+plt.show()
+
+# Coefficient and intercept
+print("Slope (effect):", model.coef_[0])
+print("Intercept:", model.intercept_)
+print("R² Score:", model.score(X, y))
