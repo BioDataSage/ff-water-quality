@@ -74,6 +74,10 @@ Here is the plot for indicator importance:
 
 ![Indicator Importance Plot](https://github.com/BioDataSage/ff-water-quality/blob/main/figures/vip_plot.png)
 
+Here is the scatter plot showing correlation in between Basic hygiene service and fetal mortality 
+
+![Scatter plot](https://github.com/BioDataSage/ff-water-quality/blob/main/figures/basic.png)
+
 ## Supporting Literature
 Our analysis identified **basic drinking water access** and **basic hygiene services** as the strongest WASH-related predictors of lower infant mortality. Two key published studies corroborate these findings:
 - Ejemot-Nwadiaro et al. (2021) found that hand-washing promotion in low- and middle-income settings reduces diarrhoeal disease incidence by approximately 25-33%.  (https://pubmed.ncbi.nlm.nih.gov/33539552/)
