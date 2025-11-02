@@ -116,13 +116,16 @@ ensemble_model %>%
   theme(plot.title = element_text(hjust = 0.5))
 
 #graphing variable importance (but, in a bar graph)
-ensemble_model %>% 
+vip_plot <- ensemble_model %>% 
   vip(geom = "col", num_feature = 9) +
   labs(title = "Understanding Indicator Importance",
        x = "Importance Score",
        y = "Indicator") +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5))
+
+ggsave(filename = "vip_plot.png", plot = vip_plot, width = 9, height = 6, dpi = 300)
+
 
 
 #printing model metrics for evaluation
