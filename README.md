@@ -13,8 +13,9 @@ We cleaned, processed, and analyzed WASH datasets using R and Python within Posi
 # Data Visualization:
 We created various visual outputs to communicate findings effectively. This included  scatter plots and other visual summaries built using Matplotlib in Python and ggplot2 in R. These charts helped highlight key patterns and illustrated important insights from the WASH datasets
 
-here is the plot for indiactor imporatnce 
-!image [vip_plot.png]   
+Here is the plot for indicator importance:
+
+![Indicator Importance Plot]()
 
 # Tools & Libraries Used
 
