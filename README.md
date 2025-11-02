@@ -65,3 +65,10 @@ Python: Matplotlib, Pandas, NumPy
 R: ggplot2, tidyverse, caret, randomForest
 
 Environment: Posit Cloud (RStudio & Jupyter)
+
+# Team Members:
+1.Chi Chi Okezie
+2.Courtney-Grace Neizer
+3.Dareen Lee
+4.Shivani Pawar
+ 
