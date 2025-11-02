@@ -74,6 +74,11 @@ Here is the plot for indicator importance:
 
 ![Indicator Importance Plot](vip_plot.png)
 
+## Supporting Literature
+Our analysis identified **basic drinking water access** and **basic hygiene services** as the strongest WASH-related predictors of lower infant mortality. Two key published studies corroborate these findings:
+- Ejemot-Nwadiaro et al. (2021) found that hand-washing promotion in low- and middle-income settings reduces diarrhoeal disease incidence by approximately 25-33%.  (https://pubmed.ncbi.nlm.nih.gov/33539552/)
+- Wolf et al. (2018) conducted a meta-analysis showing that improved drinking water, sanitation, and hand-washing interventions significantly lower childhood diarrhoea risk. (https://pubmed.ncbi.nlm.nih.gov/29537671/)
+
 # Tools & Libraries Used
 
 Python: Matplotlib, Pandas, NumPy
