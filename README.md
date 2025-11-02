@@ -15,7 +15,7 @@ We created various visual outputs to communicate findings effectively. This incl
 
 Here is the plot for indicator importance:
 
-![Indicator Importance Plot]()
+![Indicator Importance Plot](vip_plot.png)
 
 # Tools & Libraries Used
 
