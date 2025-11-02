@@ -1,7 +1,7 @@
 # ff-water-quality
 
 ## Project Navigation
-* data/
+* data
   * country_indicators_and_fmr.csv - Our scrubbed and transformed data. This is the output .csv from code block 1 of water_health_correlation_pipeline.
   * fetal_mortality.csv - Under-5 mortality data. Taken from 'https://www.who.int/data/sets/health-inequality-monitor-dataset#igme-u5mr'
   * water_health_indicators - WASH indicator data. Taken from 'https://www.who.int/data/sets/health-inequality-monitor-dataset#wash'
@@ -19,31 +19,34 @@
 ## Research Question / Focus
 What factors of water supply, sanitation, and hygiene are the biggest contributors to a country's infant mortality rate?
 
-## Outcome Threshold
-Infant mortality classification using World Bank reference (https://data.worldbank.org/indicator/SP.DYN.IMRT.IN):
-- High > 39.2 deaths per 1,000 live births
-- Low ≤ 39.2
-
-This threshold was derived as the average infant mortality rate across 2000–2019 (inclusive).
-
 ## Data Sources
 - WASH Indicators (WHO Health Inequality Monitor - JMP): https://www.who.int/data/sets/health-inequality-monitor-dataset#wash
 - Under-5 Mortality (WHO Health Inequality Monitor - IGME): https://www.who.int/data/sets/health-inequality-monitor-dataset#igme-u5mr
+- Ejemot-Nwadiaro, R.I. et al. (2021) “Hand-washing promotion for preventing diarrhoea,” Cochrane database of systematic reviews, 12(1), p. CD004265. Available at: https://doi.org/10.1002/14651858.CD004265.pub4.
+- Wolf, J. et al. (2018) “Impact of drinking water, sanitation and handwashing with soap on childhood diarrhoeal disease: updated meta-analysis and meta-regression,” Tropical medicine & international health: TM & IH, 23(5), pp. 508–525. Available at: https://doi.org/10.1111/tmi.13051.
+
 
 ## Indicators (independent variables)
-- Population using basic drinking water services (%)
 - Population using basic sanitation services (%)
+- Population using limited sanitation services (%)
+- Population practising open defecation (%)
+- Population using basic drinking water services (%)
+- Population using limited drinking water services (%)
+- Population using surface water (%)
 - Population using basic hygiene services (%)
+- Population using limited hygiene services (%)
+- Population with no hygiene services (%)`,
 
 ## Outcome (dependent variables)
 - Infant mortality rate (under-5 mortality or infant mortality as reported in IGME)
 - Optional proxy: diarrheal disease indicators if available and consistently linked by country-year
 
 ## Data Gathering / Data Cleaning
-- Remove rows with missing values in variables used for a given analysis.
-- One-hot encode categorical disaggregation:
-  1. Life Expectancy (60+ = high(1), <60 = low(0))
-  2. Indicators
+- Filtered the main dataset to keep only relevant data and dates on or before 2019, removing irrelevant columns to focus on necessary variables
+- Converted date variables to appropriate formats and created a combined key (country_year) joining country/region and year for easier merging.
+- Pivoted the main dataset to wide format with each indicator as a separate column for modeling.
+- Cleaned the fetal mortality dataset by selecting relevant dates, filtering, and creating a matching country_year key.
+- Merged the two cleaned datasets on country_year and date, renamed columns for clarity, removed missing data and duplicates, creating the final dataset ready for analysis
 
 ## Data Completeness Consideration
 Countries with insufficient data across the key WASH and mortality variables were identified.  
@@ -68,7 +71,7 @@ To maintain consistency and analytical reliability, countries with substantial m
 # Data Analysis:
 We cleaned, processed, and analyzed WASH datasets using R and Python within Posit Cloud (Jupyter & RStudio) and google colab. The analysis work included data wrangling, statistical summaries, and exploratory techniques to identify patterns, relationships, and trends in the data. We also implemented a Random Forest model in R to support predictive analysis and evaluate feature importance.
 # Data Visualization:
-We created various visual outputs to communicate findings effectively. This included  scatter plots and other visual summaries built using Matplotlib in Python and ggplot2 in R. These charts helped highlight key patterns and illustrated important insights from the WASH datasets
+We created various visual outputs to communicate findings effectively. This included scatter plots, bar graphs, tables, and other visual summaries built using Matplotlib in Python and ggplot2 in R. These charts helped highlight key patterns and illustrated important insights from the WASH datasets
 
 Here is the plot for indicator importance:
 
@@ -87,7 +90,7 @@ Our analysis identified **basic drinking water access** and **basic hygiene serv
 
 Python: Matplotlib, Pandas, NumPy
 
-R: ggplot2, tidyverse, caret, randomForest
+R: dplyr, ggplot2, tidyverse, ggthemes, tidyverse, tidymodels, rpart, rpart.plot, randomForest, infer, vip
 
 Environment: Posit Cloud (RStudio & Jupyter)
 
