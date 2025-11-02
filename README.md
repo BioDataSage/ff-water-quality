@@ -31,7 +31,7 @@ This threshold was derived as the average infant mortality rate across 2000–20
   1. Life Expectancy (60+ = high(1), <60 = low(0))
   2. Indicators
 
-### Data Completeness Consideration
+## Data Completeness Consideration
 Countries with insufficient data across the key WASH and mortality variables were identified.  
 To maintain consistency and analytical reliability, countries with substantial missing values were excluded for correlation-based analyses, while broader visualizations could include all countries where data were available.
 
@@ -40,7 +40,7 @@ To maintain consistency and analytical reliability, countries with substantial m
 - Create derived field(s) when needed:
   - High/low infant mortality label
 
-### Aggregation
+## Aggregation
 - Time-series (trend over 2000–2019, inclusive of both years)
 
 ## Analysis Plan
