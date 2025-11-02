@@ -1,0 +1,213 @@
+---
+title: "Assessing Key Indicators Through Random Forest Variable Importance Analysis"
+format: html
+editor: visual
+---
+
+## Data Cleaning / Pre-processing steps
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(ggthemes)
+
+dat <- read_csv("data/water_health_indicators.csv")
+
+# data cleaning steps
+dat_clean <- dat %>%
+  filter(subgroup %in% "Rural") %>% #this selection is arbitrary results are representative of population 
+  mutate(date = as.numeric(date)) %>% 
+  filter(date < 2019) %>% 
+  select(-source, -dimension, -se, -ci_lb, -ci_ub, -flag, -iso3, -favourable_indicator, -update, -dataset_id, -indicator_abbr, -indicator_scale,-ordered_dimension, -subgroup_order, -reference_subgroup, -wbincome2024, -estimate, -population) %>%
+  mutate(year = as.character(date)) %>%
+  unite("country_year", setting, year, sep = "_") %>%
+  pivot_wider(
+    names_from = indicator_name,
+    values_from = setting_average
+  ) %>% 
+  select(1:16)
+
+#read in fetal mortality rate data
+fetal_mortality_rate_dat <- read_csv("fetal_mortality.csv")
+
+#fetal mortality rate data cleaning 
+fmr_dat_clean <- fetal_mortality_rate_dat %>%
+  filter(date > 1999) %>%
+  select(setting, date, dimension, setting_average, population) %>% 
+  mutate(year = as.character(date)) %>% 
+  unite("country_year", setting, year, sep = "_") %>%
+  filter(dimension %in% c("Sex")) 
+
+#joining the data with some final cleaning steps
+final_dataset <- dat_clean %>%
+  full_join(fmr_dat_clean, by = c("country_year", "date")) %>% 
+  rename("fetal_mortality_country_average" = "setting_average") %>% 
+  select(-dimension, -population) %>% 
+  drop_na() %>% 
+  unique()
+  
+#composing this into a final data set for further analysis
+write_csv(final_dataset, "data/country_indicators_and_fmr.csv")
+
+```
+
+```{python}
+'''
+This calculates the Pearson correlation coefficients, quantifying
+the relationship between water/health indicators and under-5 mortality
+Psuedocode:
+1)  Get scrubbed data into dataframe
+2)  Drop extra non-indicator data
+3)  Calculate the Pearson correlation coefficients for between each indicator and
+    the under-5 mortality rate
+'''
+
+import numpy as np
+import pandas as pd
+  
+def calculate_pearson_correlation_coefficient(df):
+  '''
+  Goal: Calculate the Pearson correlation coefficient between two arrays!
+  https://en.wikipedia.org/wiki/Pearson_correlation_coefficient
+  
+  Input Variables:
+    df: Our dataframe that contains water and health indicators as percentages
+    of the population as well as an appended under-5 mortality column as deaths
+    per 1000.
+  
+  Output Variables:
+    pearson_correlation_matrix: A matrix containing the calculated Pearson correlation coefficient
+    between each indicator. The output measures both strength and direction of the 
+    relationship between variables on a scale between -1 and 1.
+
+    u5_pearson_correlation_coefficients: A single column with just the correlation between indicators
+    and under-5(u5) mortality
+  '''
+  # Calculate the coeffiecients automatically using pandas methods
+  # https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.corr.html
+  pearson_correlation_matrix = df.corr(method='pearson')
+
+  # Isolate the under-5 mortality and indicator coefficients from the matrix
+  u5_pearson_correlation_coefficients = pearson_correlation_matrix['fetal_mortality_country_avergage']
+  
+  # Drop the u5 correlation with itself
+  u5_pearson_correlation_coefficients.drop('fetal_mortality_country_average', errors='ignore')
+
+  return u5_pearson_correlation_coefficients
+
+def import_data(file):
+  '''
+  Goal: Take scrubbed data as a .csv and convert to pandas dataframe
+  '''
+  df = pd.read_csv(file)
+
+  return df
+
+def main():
+  # 1) Import data
+  df = import_data("data/country_indicators_and_fmr.csv")
+
+  # 2) Drop non-indicator columns
+  df_indicators = df.drop(columns =['country_year','date','subgroup','whoreg6'])
+  # Convert string data to float64
+  df_indicators_numeric = df.indicators.astype(np.float64)
+
+  # 3) Get the Pearson correlation coefficients between under-5 mortality and each indicator
+  u5_pearson_correlation_coefficients = calculate_pearson_correlation_coefficient(df_indicators)
+  # Sort in descending order to get the strongest indicators
+  print(u5_pearson_correlation_coefficients.sort_values(ascending=False, key=abs))
+
+if __name__ == "__main__":
+  main()
+```
+
+# Building a Random Forest Model and Evaluating Variable Importance
+
+```{r}
+# building random forest modeling 
+
+# set the seed to have reproducibility
+set.seed(253)
+
+#loading in nessecary packages 
+library(tidyverse)
+library(tidymodels)
+library(rpart)        # for building trees
+library(rpart.plot)   # for plotting trees
+library(randomForest) # for bagging & forests
+library(infer) 
+library(vip)
+
+
+#resolves package conflicts by preferring tidymodels functions
+tidymodels_prefer()
+
+
+# STEP 1: Model Specification
+rf_spec <- rand_forest()  %>%
+  set_mode("regression") %>%
+  set_engine(engine = "ranger") %>% 
+  set_args(
+    mtry = NULL,
+    trees = 500,
+    min_n = 2,
+    probability = FALSE, # give classifications, not probability calculations
+    importance = "impurity" # use Gini index to measure variable importance
+  )
+
+# STEP 2: Build the forest model
+ensemble_model <- rf_spec %>% 
+  fit(fetal_mortality_country_average ~ 
+      `Population using basic sanitation services (%)` + 
+      `Population using limited sanitation services (%)` + 
+      `Population practising open defecation (%)` + 
+      `Population using basic drinking water services (%)` + 
+      `Population using limited drinking water services (%)` + 
+      `Population using surface water (%)` + 
+      `Population using basic hygiene services (%)` + 
+      `Population using limited hygiene services (%)` + 
+      `Population with no hygiene services (%)`, 
+      data = final_dataset)
+
+#plucking variable importance 
+ensemble_model %>%
+  extract_fit_engine() %>%
+  pluck("variable.importance") %>% 
+  sort(decreasing = TRUE)
+
+#graphing variable importance
+ensemble_model %>% 
+  vip(geom = "point", num_features = 9) +
+  labs(title = "Understanding Indicator Importance",
+       x = "Indicator",
+       y = "Importance Score") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+#graphing variable importance (but, in a bar graph)
+vip_plot <- ensemble_model %>% 
+  vip(geom = "col", num_feature = 9) +
+  labs(title = "Understanding Indicator Importance",
+       y = "Importance Score",
+       x = "Indicator") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggsave(filename = "vip_plot.png", plot = vip_plot, width = 9, height = 6, dpi = 300)
+
+
+
+#printing model metrics for evaluation
+
+ensemble_model
+
+library(yardstick)
+
+predictions <- predict(ensemble_model, final_dataset) %>% bind_cols(final_dataset)
+
+predictions %>% 
+  metrics(truth = fetal_mortality_country_average, estimate = .pred) %>% 
+  print()
+
+```
