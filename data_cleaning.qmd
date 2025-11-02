@@ -57,7 +57,7 @@ write_csv(final_dataset, "rural_indicators.csv")
 ```{r}
 # building random forest modeling 
 
-#ensuring randomness 
+# set the seed to have reproducibility
 set.seed(253)
 
 #loading in nessecary packages 
@@ -70,7 +70,7 @@ library(infer)
 library(vip)
 
 
-
+#resolves package conflicts by preferring tidymodels functions
 tidymodels_prefer()
 
 
