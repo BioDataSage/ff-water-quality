@@ -16,7 +16,6 @@ dat <- read_csv("data.csv")
 
 # data cleaning steps
 dat_clean <- dat %>%
-  filter(subgroup %in% c("Rural")) %>% 
   mutate(date = as.numeric(date)) %>% 
   filter(date < 2019) %>% 
   select(-source, -dimension, -se, -ci_lb, -ci_ub, -flag, -iso3, -favourable_indicator, -update, -dataset_id, -indicator_abbr, -indicator_scale,-ordered_dimension, -subgroup_order, -reference_subgroup, -wbincome2024, -estimate, -population) %>%
