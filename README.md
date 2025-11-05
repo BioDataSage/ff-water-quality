@@ -8,7 +8,7 @@
 * figures
   * vip_plot.png
 * results
-  * pearson_correlation_results.txt - Pearson correlation results between indicators and under-5 mortalityu. This is the output .txt from code block 2 of water_health_correlation_pipeline.qmd
+  * pearson_correlation_results.txt - Pearson correlation results between indicators and under-5 mortality. This is the output .txt from code block 2 of water_health_correlation_pipeline.qmd
 * water_health_correlation_pipeline.qmd
   * This is our core pipeline that contains our data scrubber and data manipulation. It uses the Quatro medium. The medium is capable of interpretting both R and Python allowing each team member to play to their unique strengths.
 ***
