@@ -35,18 +35,17 @@ What factors of water supply, sanitation, and hygiene are the biggest contributo
 - Population using surface water (%)
 - Population using basic hygiene services (%)
 - Population using limited hygiene services (%)
-- Population with no hygiene services (%)`,
+- Population with no hygiene services (%)
 
 ## Outcome (dependent variables)
 - Infant mortality rate (under-5 mortality or infant mortality as reported in IGME)
-- Optional proxy: diarrheal disease indicators if available and consistently linked by country-year
 
 ## Data Gathering / Data Cleaning
 - Filtered the main dataset to keep only relevant data and dates on or before 2019, removing irrelevant columns to focus on necessary variables
 - Converted date variables to appropriate formats and created a combined key (country_year) joining country/region and year for easier merging.
 - Pivoted the main dataset to wide format with each indicator as a separate column for modeling.
 - Cleaned the infant mortality dataset by selecting relevant dates, filtering, and creating a matching country_year key.
-- Merged the two cleaned datasets on country_year and date, renamed columns for clarity, removed missing data and duplicates, creating the final dataset ready for analysis
+- Merged the two cleaned datasets on country_year and date, renamed columns for clarity, removed missing data and duplicates, creating the final dataset for analysis
 
 ## Data Completeness Consideration
 Countries with insufficient data across the key WASH and mortality variables were identified.  
@@ -96,7 +95,10 @@ Environment: Posit Cloud (RStudio & Jupyter)
 
 # Team Members:
 1.Chi Chi Okezie
+
 2.Courtney-Grace Neizer
+
 3.Darren Lee
+
 4.Shivani Pawar
  
