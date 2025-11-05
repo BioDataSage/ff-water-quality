@@ -45,7 +45,7 @@ What factors of water supply, sanitation, and hygiene are the biggest contributo
 - Filtered the main dataset to keep only relevant data and dates on or before 2019, removing irrelevant columns to focus on necessary variables
 - Converted date variables to appropriate formats and created a combined key (country_year) joining country/region and year for easier merging.
 - Pivoted the main dataset to wide format with each indicator as a separate column for modeling.
-- Cleaned the fetal mortality dataset by selecting relevant dates, filtering, and creating a matching country_year key.
+- Cleaned the infant mortality dataset by selecting relevant dates, filtering, and creating a matching country_year key.
 - Merged the two cleaned datasets on country_year and date, renamed columns for clarity, removed missing data and duplicates, creating the final dataset ready for analysis
 
 ## Data Completeness Consideration
@@ -65,7 +65,7 @@ To maintain consistency and analytical reliability, countries with substantial m
 - Correlation analysis:
   - Compute Pearson correlations between each WASH indicator (% water, % sanitation, % hygiene) and infant mortality.
   - Report correlation coefficients.
-- Fit a random forests classification model with fetal mortality as the outcome and WASH variables as predictors.
+- Fit a random forests classification model with intant mortality as the outcome and WASH variables as predictors.
 - Use feature importance scores to rank variables by their contribution. 
 
 # Data Analysis:
@@ -77,7 +77,7 @@ Here is the plot for indicator importance:
 
 ![Indicator Importance Plot](https://github.com/BioDataSage/ff-water-quality/blob/main/figures/vip_plot.png)
 
-Here is the scatter plot showing correlation in between Basic hygiene service and fetal mortality 
+Here is the scatter plot showing correlation in between Basic hygiene service and infant mortality 
 
 ![Scatter plot](https://github.com/BioDataSage/ff-water-quality/blob/main/figures/basic.png)
 
